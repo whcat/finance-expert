@@ -1,0 +1,27 @@
+# 追蹤來源設定檔
+# enabled: false 的來源會被跳過。填好後改成 true。
+
+settings:
+  whisper_model: medium      # tiny / base / small / medium / large-v3（越大越準越慢）
+  language: zh               # 轉錄語言
+  max_new_items: 3           # 每個來源每次執行最多處理幾集（回補歷史時可調大）
+  audio_dir: audio_cache
+  transcript_dir: transcripts
+
+youtube:
+  # url 填頻道網址（@handle 或 /channel/ 形式皆可）
+  - name: 游庭皓的財經皓角
+    url: https://www.youtube.com/@yutinghaofinance/streams
+    enabled: true
+  - name: 數字台灣
+    url: https://www.youtube.com/@%E6%95%B8%E5%AD%97%E5%8F%B0%E7%81%A3
+    enabled: true
+
+
+podcasts:
+  # rss 填節目的 RSS feed 網址。
+  # 找 RSS 的方法：到 https://castos.com/tools/find-podcast-rss-feed/
+  # 或 Apple Podcasts 網頁版搜尋節目後用 https://getrssfeed.com/ 轉換。
+  - name: Gooaye 股癌
+    rss: https://feeds.soundon.fm/podcasts/954689a5-3096-43a4-a80b-7810b219cef3.xml
+    enabled: true

@@ -1,0 +1,13 @@
+# 原始逐字稿不公開（版權考量），留在本地
+transcripts/
+
+# 本地流程檔案
+audio_cache/
+processed.json
+*.log
+*.err
+
+# 工具與快取
+.claude/
+__pycache__/
+*.pyc
