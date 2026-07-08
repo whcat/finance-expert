@@ -1,5 +1,21 @@
 # 專案進度紀錄
 
+## 2026-07-09 — Streamlit 介面部署到公開網頁
+
+### 已完成
+- [x] **部署決策**：平台選 Streamlit Community Cloud（免費、GitHub 連動、push 即自動更新）；**原始逐字稿不公開**（別人節目的完整逐字稿有版權疑慮），公開版只含觀點檔、profile、節目總結、比對專題
+- [x] 環境建置：winget 安裝 Git 2.55 與 GitHub CLI 2.96（新裝完既有終端機讀不到 PATH，必要時用完整路徑 `C:\Program Files\Git\cmd\git.exe`、`C:\Program Files\GitHub CLI\gh.exe`）
+- [x] 建立 git repo：`.gitignore` 排除 `transcripts/`、`audio_cache/`、`processed.json`、log 檔、`.streamlit/`；新增 `requirements.txt`（雲端安裝依賴用）
+- [x] GitHub 登入：gh 互動式登入在終端機碰壁，改用 OAuth device flow（腳本輪詢取 token → 驗證 → `gh auth login --with-token`）完成登入，帳號 **whcat**
+- [x] 建立 repo 並推送：https://github.com/whcat/finance-expert （main branch）
+- [x] Repo 由私有改公開——Streamlit Cloud 讀私有 repo 需另外授權 GitHub App，顯示「This repository does not exist」；改公開後免授權
+- [x] 修正雲端啟動失敗：repo 裡的 `.streamlit/config.toml` 固定 port 8502（本機避開股票分析專案用），與 Streamlit Cloud 衝突 → 從 repo 移除（本機檔案保留，本地照舊跑 8502）
+
+### 待辦
+- [ ] 確認 Streamlit Cloud 部署成功、公開網址可正常瀏覽（share.streamlit.io → Create app → `whcat/finance-expert` / `main` / `app.py`）
+- [ ] 日後更新公開網頁：產出新觀點檔後 `git add -A → commit → push`（或跟 Claude 說「推上去」），雲端會自動重新部署
+- [ ] 注意：日後若新增含敏感資訊或逐字稿性質的目錄，記得先進 `.gitignore` 再 commit（repo 現為公開）
+
 ## 2026-07-08（深夜）— Streamlit 側欄改版：講者／節目分開呈現
 - [x] 側欄從單一混合清單改為上下兩組獨立選單：**講者**（游庭皓、謝孟恭…，有 profile.md 的排前面）在上，**節目**（數字台灣…，有節目總結的排前面）在下，中間分隔線
 - [x] 兩組各自維持自己的選擇狀態（用 `st.session_state.active_kind` 追蹤最後點的是講者還是節目），互不干擾
