@@ -11,3 +11,6 @@ processed.json
 .claude/
 __pycache__/
 *.pyc
+
+# 本機專用 port 設定，雲端不適用
+.streamlit/
