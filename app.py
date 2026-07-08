@@ -140,11 +140,17 @@ if "active_kind" not in st.session_state:
 
 
 def _pick_person():
+    """點講者時清空節目選取：radio 值沒變化不會觸發 on_change，
+    若讓節目維持選取狀態，之後再點同一個節目會切不回去。"""
     st.session_state.active_kind = "person"
+    if show_names:
+        st.session_state.show_radio = None
 
 
 def _pick_show():
     st.session_state.active_kind = "show"
+    if person_names:
+        st.session_state.person_radio = None
 
 
 st.sidebar.caption("講者")
@@ -171,8 +177,13 @@ else:
 
 if st.session_state.active_kind == "show" and show_choice:
     picked = {"type": "show", "name": show_choice}
-else:
+elif person_choice:
     picked = {"type": "person", "name": person_choice}
+elif show_choice:
+    picked = {"type": "show", "name": show_choice}
+else:
+    picked = {"type": "person", "name": person_names[0]} if person_names \
+        else {"type": "show", "name": show_names[0]}
 
 st.sidebar.divider()
 query = st.sidebar.text_input("🔍 搜尋內容", placeholder="例如：記憶體、升息、台積電")
