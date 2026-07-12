@@ -143,6 +143,7 @@ def render_compare_tab():
 
 # ---------- 側欄：講者在上、節目在下，分開兩組 ----------
 st.sidebar.title("📈 財經觀點追蹤")
+st.sidebar.caption("⚠️ 本站內容為節目發言的整理彙總，僅供資訊參考，不構成投資建議。")
 
 person_names = sorted(list_people(), key=lambda n: (not person_has_profile(n), n))
 show_names = sorted(list_shows(), key=lambda n: (not show_has_summaries(n), n))

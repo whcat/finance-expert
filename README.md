@@ -20,10 +20,9 @@ people/<講者>/views/<日期>-<節目>-<集名>.md
 
 ## 日常使用
 
-1. `python scripts/fetch.py` — 抓所有來源的新集數（已處理過的會自動跳過）
-2. `python scripts/transcribe.py` — 轉錄佇列中的音檔（一小時的節目在 CPU 上約需 20–40 分鐘）
-3. 開 Claude Code，說：**「用 background.md 分析 transcripts 裡還沒處理的逐字稿」**
-4. `streamlit run app.py` — 開啟觀點瀏覽介面（http://localhost:8501），可依講者瀏覽立場總覽、觀點時間軸、搜尋全文、對照原始逐字稿
+1. `python scripts/run_pipeline.py` — 依序跑 `fetch.py` → `transcribe.py`，結束後列出本次新增、還沒萃取觀點的逐字稿（也可以分開單獨執行這兩支）
+2. 開 Claude Code，說：**「用 background.md 分析 transcripts 裡還沒處理的逐字稿」**
+3. `streamlit run app.py` — 開啟觀點瀏覽介面（http://localhost:8502，port 固定在 `.streamlit/config.toml`），可依講者瀏覽立場總覽、觀點時間軸、搜尋全文、對照原始逐字稿
 
 ## 設定
 
