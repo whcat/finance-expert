@@ -1,5 +1,17 @@
 # 專案進度紀錄
 
+## 2026-07-12（深夜）— 轉錄優化＋M平方回補萃取＋遺漏檢討（Opus 4.8）
+- [x] **轉錄小錯誤優化（兩項輕量作法）**：`scripts/common.py` 新增 `build_hotwords()`（從 `_aliases.yaml` 標準名組出 hotwords 餵給 faster-whisper 解碼加權）與 `apply_whisper_corrections()`（依 `_aliases.yaml` 新增的 `whisper_corrections` 對照表在寫檔前修正已知誤轉字）；`transcribe.py` 兩處接上。之後新增誤轉字只需在 `_aliases.yaml` 加一行，hotwords 與修正表自動生效
+- [x] **謝金河 profile.md 補建**（達三集門檻）：從 HD619–622 彙整，含台股過熱但不崩雙面判斷、南韓槓桿示警鏈跨集升級、聯發科第二護國神山、生技十年大局，5 項預測記錄；註記數字台灣已停更、範圍固定
+- [x] **公開站免責聲明**（`app.py` 側欄常駐）＋**`scripts/run_pipeline.py`**（fetch→transcribe 一鍵、列出待萃取）＋`README.md` 修正 port 8501→8502
+- [x] **新增 `scripts/status_check.py`**：檢查①待萃取（比對逐字稿 vs 觀點檔/總結，不看 processed.json）②待回驗（掃 profile 預測表，驗證時點已過卻仍待驗證者）。含 `SKIP_TRANSCRIPTS`（已決定不萃取的逐字稿）
+- [x] **遺漏檢討（使用者提問）**：M平方加入追蹤時 `fetch.py` 一次抓進 10 集、但當時只萃取最新 3 集（EP203–205），更早 6 集被漏。**根因＝抓取與萃取進度各記各的、processed.json 只記「抓過」不記「萃取過」、無對帳機制**——status_check.py 正是補此洞
+- [x] **M平方回補萃取（Opus 4.8）**：新增當集總結 6 篇——EP206（7/12，Dylan/ETF）、EP200 Q&A（Rachel/三層分析法）、知識點特輯（Jat/權證，僅收行情回顧）、EP201（Vivianna/創高焦慮）、EP202（Jason/IPO 狂潮＋Computex）、6/14 聯合特輯（Jenny＋Ralice）；**6/14 因含常態講者王怡人，另建其觀點檔（目前她最早一篇，早於 6/17）**。MM 總結現 EP200–206 連續共 9 篇
+- [x] **跳過 5/18**（純 MM Max AI 產品廣告、無市場內容，使用者同意）；已入 status_check `SKIP_TRANSCRIPTS` 避免重複標記
+- [x] `_aliases.yaml` 新增 Dylan、Jason（財經M平方研究經理，尚無獨立觀點檔）
+- [x] status_check 驗證：待萃取 0、待回驗 0（17 則模糊驗證時點需人工判斷）
+- 待辦：本批變更未 commit/push；王怡人 profile 核心立場尚未納入 6/14（已於檔頭註記，待下次彙整）；M平方研究員仍各未滿三集、維持隱藏
+
 ## 2026-07-12（晚間）— 專案能力評估＋優先待辦前三項執行
 - [x] 全專案能力與未來方向評估：盤點規模（62 篇逐字稿、5 來源、3 位已建 profile 常態講者）、優勢（人本歸檔、三集門檻、模型分工、交叉比對）、落差（謝金河已達門檻未建 profile、公開站無免責聲明、流程仍手動、預測回驗靠人工、來源立場偏多頭單一化、README port 文件落差）
 - [x] **公開站加免責聲明**：`app.py` 側欄常駐一行「本站內容為節目發言的整理彙總，僅供資訊參考，不構成投資建議」（原本只在 `background.md` 寫給 Claude 看，網站本身沒顯示）
