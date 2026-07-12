@@ -12,19 +12,20 @@ from pathlib import Path
 
 from opencc import OpenCC
 
-from common import ROOT, load_config, transcript_path, write_transcript
+from common import ROOT, apply_whisper_corrections, build_hotwords, load_config, transcript_path, write_transcript
 
 AUDIO_EXTS = {".mp3", ".m4a", ".wav", ".ogg", ".opus", ".aac", ".flac", ".webm"}
 cc = OpenCC("s2twp")  # 簡體 → 台灣正體（含慣用詞）
 
 
-def transcribe_file(model, audio_path, language):
+def transcribe_file(model, audio_path, language, hotwords):
     segments, info = model.transcribe(
         str(audio_path),
         language=language,
         batch_size=8,
         vad_filter=True,  # 過濾長靜音，podcast 開頭廣告空白常見
         initial_prompt="以下是台灣財經節目的逐字稿，請使用繁體中文。",
+        hotwords=hotwords,  # 講者標準名加權，降低人名誤轉
     )
     parts = []
     for seg in segments:
@@ -32,7 +33,8 @@ def transcribe_file(model, audio_path, language):
         print(f"\r  進度 {seg.end / info.duration * 100:5.1f}%（{seg.end:.0f}/{info.duration:.0f} 秒）",
               end="", flush=True)
     print()
-    return cc.convert(" ".join(parts))
+    text = cc.convert(" ".join(parts))
+    return apply_whisper_corrections(text)
 
 
 def main():
@@ -56,6 +58,7 @@ def main():
     model = WhisperModel(model_size, device="auto", compute_type="int8",
                          cpu_threads=8)
     model = BatchedInferencePipeline(model=model)
+    hotwords = build_hotwords()
 
     for audio_path in queue:
         meta_path = audio_path.with_suffix(".json")
@@ -67,7 +70,7 @@ def main():
 
         print(f"轉錄中：{audio_path.name}")
         try:
-            text = transcribe_file(model, audio_path, language)
+            text = transcribe_file(model, audio_path, language, hotwords)
         except Exception as e:
             print(f"  轉錄失敗：{e}，保留音檔下次重試")
             continue

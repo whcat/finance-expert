@@ -14,6 +14,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 ROOT = Path(__file__).resolve().parent.parent
 SOURCES_FILE = ROOT / "sources.yaml"
 PROCESSED_FILE = ROOT / "processed.json"
+ALIASES_FILE = ROOT / "people" / "_aliases.yaml"
 
 
 def load_config():
@@ -31,6 +32,28 @@ def load_processed():
 def save_processed(processed):
     with open(PROCESSED_FILE, "w", encoding="utf-8") as f:
         json.dump(processed, f, ensure_ascii=False, indent=2)
+
+
+def load_aliases():
+    if not ALIASES_FILE.exists():
+        return {}
+    with open(ALIASES_FILE, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
+
+
+def build_hotwords():
+    """給 faster-whisper 解碼時加權的專有名詞清單（講者標準名），降低誤轉機率。"""
+    aliases = load_aliases()
+    names = [re.sub(r"（.*?）", "", k) for k in aliases if k != "whisper_corrections"]
+    return " ".join(dict.fromkeys(names))  # 保序去重
+
+
+def apply_whisper_corrections(text):
+    """套用已知的 Whisper 誤轉對照表，修正逐字稿裡重複出現的錯字。"""
+    corrections = load_aliases().get("whisper_corrections", {})
+    for wrong, right in corrections.items():
+        text = text.replace(wrong, right)
+    return text
 
 
 def sanitize_filename(name, max_len=80):
