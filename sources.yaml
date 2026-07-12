@@ -15,6 +15,9 @@ youtube:
     enabled: true
   - name: 數字台灣
     url: https://www.youtube.com/@%E6%95%B8%E5%AD%97%E5%8F%B0%E7%81%A3
+    enabled: false   # 2026-07-12 使用者指示：不再維持更新，除非重新下指令再改回 true
+  - name: MacroMicro財經M平方
+    url: https://www.youtube.com/channel/UC6LU7FUBvbFCh_cQasrHZ_Q
     enabled: true
 
 
@@ -24,4 +27,7 @@ podcasts:
   # 或 Apple Podcasts 網頁版搜尋節目後用 https://getrssfeed.com/ 轉換。
   - name: Gooaye 股癌
     rss: https://feeds.soundon.fm/podcasts/954689a5-3096-43a4-a80b-7810b219cef3.xml
+    enabled: true
+  - name: 美股投資學-財女珍妮
+    rss: https://feeds.soundon.fm/podcasts/4a8660a0-e0d0-490b-8d46-c28219606f47.xml
     enabled: true

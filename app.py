@@ -19,6 +19,11 @@ SHOWS_DIR = ROOT / "shows"
 
 st.set_page_config(page_title="財經觀點追蹤", page_icon="📈", layout="wide")
 
+# 只顯示「常態講者」：累積三集以上的觀點檔、或已彙整 profile.md 的講者。
+# 單集受訪者（多為主題式節目一次性來賓）不獨立列於側欄，其論點由該節目的
+# 當集總結涵蓋；日後某講者累積到門檻集數，就會自動出現在清單中。
+MIN_VIEWS_TO_SHOW = 3
+
 
 def clean_markdown(text):
     """相對路徑的 .md 連結在 Streamlit 裡點不開，轉成純文字；http 連結保留。"""
@@ -38,10 +43,21 @@ def person_has_profile(name):
     return (PEOPLE_DIR / name / "profile.md").exists()
 
 
+def view_count(name):
+    views_dir = PEOPLE_DIR / name / "views"
+    return sum(1 for _ in views_dir.glob("*.md")) if views_dir.exists() else 0
+
+
+def is_tracked_speaker(name):
+    """常態講者才列於側欄：有 profile.md，或觀點檔已達門檻集數。"""
+    return person_has_profile(name) or view_count(name) >= MIN_VIEWS_TO_SHOW
+
+
 def list_people():
     if not PEOPLE_DIR.exists():
         return []
-    return sorted(d.name for d in PEOPLE_DIR.iterdir() if d.is_dir())
+    return sorted(d.name for d in PEOPLE_DIR.iterdir()
+                  if d.is_dir() and is_tracked_speaker(d.name))
 
 
 @st.cache_data(ttl=60)

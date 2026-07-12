@@ -123,7 +123,12 @@ def process_youtube(config, processed):
                                  meta, text)
             else:
                 stem = sanitize_filename(f"{name}-{date_str}-{title}", 100)
-                download_audio(url, stem, audio_dir)
+                try:
+                    download_audio(url, stem, audio_dir)
+                except Exception as e:
+                    # 單支影片下載失敗（如 YouTube 403）不要中斷整批抓取，下次執行再試
+                    print(f"  音檔下載失敗（{type(e).__name__}），跳過本支、下次再試")
+                    continue
                 queue_audio_meta(audio_dir, stem, meta)
                 print(f"  音檔已排入轉錄佇列：{stem}.mp3")
 
